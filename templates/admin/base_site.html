@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/custom_admin.css" />{% endblock %}
+
+{% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Django administration' %}</h1>
+{% endblock %}
+
+{% block navmenu %}
+    {% if adm_app_list %}
+    <div style="background: #EEE;width: 100%">
+        <ul id="navmenu">
+           <li><a href="/admin/">{% trans "Home" %}</a></li>
+           {% for app in adm_app_list %}
+               <li><a href="{{ app.app_url }}">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a>
+                   <ul>
+                   {% for model in app.models %}
+                       {% if model.perms.change %}
+                           <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                       {% else %}
+                           <li>{{ model.name }}</li>
+                       {% endif %}
+                   {% endfor %}
+                   </ul>
+               </li>
+           {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
